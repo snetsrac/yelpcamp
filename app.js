@@ -1,12 +1,13 @@
 const path = require('path');
 const express = require('express');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Campground = require('./models/campground');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
   useNewUrlParser: true,
+  useFindAndModify: false,
   useUnifiedTopology: true,
-  useFindAndModify: true,
   useCreateIndex: true
 });
 
@@ -17,6 +18,7 @@ db.on('open', () => { console.log('Database connected.'); });
 const app = express();
 
 app.set('view engine', 'ejs');
+app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true}));
 
 app.get('/', (req, res) => {
@@ -34,6 +36,23 @@ app.get('/campgrounds/new', (req, res) => {
 
 app.post('/campgrounds/new', async (req, res) => {
   const campground = new Campground(req.body.campground);
+  await campground.save();
+  res.redirect(`/campgrounds/${campground._id}`);
+});
+
+app.get('/campgrounds/:id/edit', async (req, res) => {
+  const campground = await Campground.findById(req.params.id);
+  res.render('campgrounds/edit', { campground });
+});
+
+app.put('/campgrounds/:id/edit', async (req, res) => {
+  let campground = await Campground.findById(req.params.id);
+  
+  campground.title = req.body.campground.title;
+  campground.description = req.body.campground.description;
+  campground.price = req.body.campground.price;
+  campground.location = req.body.campground.location;
+
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`);
 });
