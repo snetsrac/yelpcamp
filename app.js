@@ -62,6 +62,11 @@ app.get('/campgrounds/:id', async (req, res) => {
   res.render('campgrounds/show', { campground });
 });
 
+app.delete('/campgrounds/:id', async (req, res) => {
+  await Campground.findByIdAndDelete(req.params.id);
+  res.redirect('/campgrounds');
+});
+
 app.listen(3000, () => {
   console.log('Listening on 3000.');
 });
