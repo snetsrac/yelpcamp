@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YelpCamp</title>
+  </head>
+  <body>
+    <h1>New Campground</h1>
+    <form method="POST" action="/campgrounds/new">
+      <div>
+        <label for="title">Title</label>
+        <input id="title" type="text" name="campground[title]">
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <input id="description" type="text" name="campground[description]">
+      </div>
+      <div>
+        <label for="price">Price</label>
+        <input id="price" type="text" name="campground[price]">
+      </div>
+      <div>
+        <label for="location">Location</label>
+        <input id="location" type="text" name="campground[location]">
+      </div>
+      <button type="submit">Add Campground</button>
+    </form>
+    <a href="/campgrounds">All Campgrounds</a>
+  </body>
+</html>
