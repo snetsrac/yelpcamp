@@ -6,11 +6,9 @@
     <title>YelpCamp</title>
   </head>
   <body>
-    <h1>YelpCamp Campgrounds</h1>
-    <ul>
-    <%_ for (let campground of campgrounds) { _%>
-      <li><a href="/campgrounds/<%= campground.id %>"><%= campground.title %></a></li>
-    <%_ } _%>
-    </ul>
+    <h1><%= campground.title %></h1>
+    <h2><%= campground.location %></h2>
+    <p>$<%= campground.price %></p>
+    <p><%= campground.description %></p>
   </body>
 </html>
