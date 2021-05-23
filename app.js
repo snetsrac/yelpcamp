@@ -22,15 +22,9 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/makecampground', async (req, res) => {
-  const myCampground = new Campground({
-    title: 'Dry Gulch',
-    description: 'It\'s dry and gulchy.',
-    price: 'A buck two-eighty fifty.',
-    location: 'Tuba City, NM'
-  });
-  await myCampground.save();
-  res.send(myCampground);
+app.get('/campgrounds', async (req, res) => {
+  const campgrounds = await Campground.find();
+  res.render('campgrounds/index', { campgrounds });
 });
 
 app.listen(3000, () => {
