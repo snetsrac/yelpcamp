@@ -48,14 +48,7 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 });
 
 app.put('/campgrounds/:id/edit', async (req, res) => {
-  let campground = await Campground.findById(req.params.id);
-  
-  campground.title = req.body.campground.title;
-  campground.description = req.body.campground.description;
-  campground.price = req.body.campground.price;
-  campground.location = req.body.campground.location;
-
-  await campground.save();
+  const campground = await Campground.findByIdAndUpdate(req.params.id, req.body.campground);
   res.redirect(`/campgrounds/${campground._id}`);
 });
 
