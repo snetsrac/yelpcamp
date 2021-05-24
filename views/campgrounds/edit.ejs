@@ -1,32 +1,23 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YelpCamp</title>
-  </head>
-  <body>
-    <h1><%= campground.title %></h1>
-    <form method="POST" action="/campgrounds/<%= campground._id %>/edit?_method=PUT">
-      <input type="hidden" name="campground[_id]" value="<%= campground._id %>">
-      <div>
-        <label for="title">Title</label>
-        <input id="title" type="text" name="campground[title]" value="<%= campground.title %>">
-      </div>
-      <div>
-        <label for="description">Description</label>
-        <input id="description" type="text" name="campground[description]" value="<%= campground.description %>">
-      </div>
-      <div>
-        <label for="price">Price</label>
-        <input id="price" type="text" name="campground[price]" value="<%= campground.price %>">
-      </div>
-      <div>
-        <label for="location">Location</label>
-        <input id="location" type="text" name="campground[location]" value="<%= campground.location %>">
-      </div>
-      <button type="submit">Update Campground</button>
-    </form>
-    <a href="/campgrounds/<%= campground._id %>">Go Back</a>
-  </body>
-</html>
+<%- layout('layouts/boilerplate') -%>
+<h1><%= campground.title %></h1>
+<form method="POST" action="/campgrounds/<%= campground._id %>/edit?_method=PUT">
+  <input type="hidden" name="campground[_id]" value="<%= campground._id %>">
+  <div>
+    <label for="title">Title</label>
+    <input id="title" type="text" name="campground[title]" value="<%= campground.title %>">
+  </div>
+  <div>
+    <label for="description">Description</label>
+    <input id="description" type="text" name="campground[description]" value="<%= campground.description %>">
+  </div>
+  <div>
+    <label for="price">Price</label>
+    <input id="price" type="text" name="campground[price]" value="<%= campground.price %>">
+  </div>
+  <div>
+    <label for="location">Location</label>
+    <input id="location" type="text" name="campground[location]" value="<%= campground.location %>">
+  </div>
+  <button type="submit">Update Campground</button>
+</form>
+<a href="/campgrounds/<%= campground._id %>">Go Back</a>

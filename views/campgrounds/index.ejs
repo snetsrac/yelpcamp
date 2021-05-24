@@ -1,17 +1,8 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YelpCamp</title>
-  </head>
-  <body>
-    <h1>YelpCamp Campgrounds</h1>
-    <a href="/campgrounds/new">Add New Campground</a>
-    <ul>
-    <%_ for (let campground of campgrounds) { _%>
-      <li><a href="/campgrounds/<%= campground.id %>"><%= campground.title %></a></li>
-    <%_ } _%>
-    </ul>
-  </body>
-</html>
+<%- layout('layouts/boilerplate') -%>
+<h1>YelpCamp Campgrounds</h1>
+<a href="/campgrounds/new">Add New Campground</a>
+<ul>
+<%_ for (let campground of campgrounds) { _%>
+  <li><a href="/campgrounds/<%= campground.id %>"><%= campground.title %></a></li>
+<%_ } _%>
+</ul>
