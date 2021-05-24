@@ -1,9 +1,11 @@
 const path = require('path');
 const engine = require('ejs-mate');
 const express = require('express');
+const createError = require('http-errors');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Campground = require('./models/campground');
+const routeHandlerAsync = require('./utils/routeHandlerAsync');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
   useNewUrlParser: true,
@@ -27,39 +29,52 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', routeHandlerAsync(async (req, res, next) => {
   const campgrounds = await Campground.find();
   res.render('campgrounds/index', { campgrounds });
-});
+}));
 
 app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 });
 
-app.post('/campgrounds/new', async (req, res) => {
+app.post('/campgrounds/new', routeHandlerAsync(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`);
-});
+}));
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', routeHandlerAsync(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
   res.render('campgrounds/edit', { campground });
-});
+}));
 
-app.put('/campgrounds/:id/edit', async (req, res) => {
+app.put('/campgrounds/:id/edit', routeHandlerAsync(async (req, res, next) => {
   const campground = await Campground.findByIdAndUpdate(req.params.id, req.body.campground);
   res.redirect(`/campgrounds/${campground._id}`);
-});
+}));
 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', routeHandlerAsync(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
   res.render('campgrounds/show', { campground });
+}));
+
+app.delete('/campgrounds/:id', routeHandlerAsync(async (req, res, next) => {
+    await Campground.findByIdAndDelete(req.params.id);
+    res.redirect('/campgrounds');
+}));
+
+app.all('*', (req, res, next) => {
+  next(createError(404, 'The resource you requested could not be found.'));
 });
 
-app.delete('/campgrounds/:id', async (req, res) => {
-  await Campground.findByIdAndDelete(req.params.id);
-  res.redirect('/campgrounds');
+app.use((err, req, res, next) => {
+  if (createError.isHttpError(err)) {
+    res.render('error', { err });
+  } else {
+    console.error(err.stack || err.message);
+    res.render('error', { err: createError(500, 'An unexpected server error occured.') });
+  }
 });
 
 app.listen(3000, () => {
