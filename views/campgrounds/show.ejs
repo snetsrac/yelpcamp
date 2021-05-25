@@ -1,7 +1,7 @@
 <%- layout('layouts/boilerplate') -%>
 <div class="row">
-  <div class="col-md-6 offset-3">
-    <div class="card">
+  <div class="col-md-6">
+    <div class="card mb-4">
       <img src="<%= campground.image %>" class="card-img-top" >
       <div class="card-body">
         <h5 class="card-title"><%= campground.title %></h5>
@@ -19,10 +19,8 @@
       </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <h1 class="text-center">Leave a Review</h1>
-  <div class="col-md-6 offset-3">
+  <div class="col-md-6">
+    <h1 class="text-center">Leave a Review</h1>
     <form method="POST" action="/campgrounds/<%= campground._id %>/reviews" class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="rating" class="form-label">Rating</label>
@@ -43,5 +41,23 @@
       </div>
       <button type="submit" class="btn btn-success">Submit Review</button>
     </form>
+    <div class="card mt-4">
+      <div class="card-header">
+        <h4 class="card-title">Reviews</h4>
+      </div>
+      <ul class="list-group list-group-flush">
+      <%_ if (campground.reviews.length === 0) { _%>
+        <li class="list-group-item"><em>No one has left a review for this campground.</em></li>
+      <%_ } else { _%> 
+      <%_   for (let review of campground.reviews) { _%>
+        <li class="list-group-item">
+          <h5>Rating: <%= review.rating %></h5>
+          <p style="white-space: pre-line"><%= review.text %></p>
+          <small class="text-muted"><em><%= review._id.getTimestamp() %></em></small>
+        </li>
+      <%_   } _%>
+      <%_ } _%>
+      </ul>
+    </div>
   </div>
 </div>
