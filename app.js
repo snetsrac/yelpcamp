@@ -4,6 +4,7 @@ const express = require('express');
 const createError = require('http-errors');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const session = require('express-session');
 const campgroundsRouter = require('./routes/campgrounds');
 const reviewsRouter = require('./routes/reviews');
 
@@ -22,9 +23,19 @@ const app = express();
 
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
+
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'super secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+}));
 
 app.get('/', (req, res) => {
   res.render('index');
