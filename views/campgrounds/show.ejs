@@ -47,13 +47,18 @@
       </div>
       <ul class="list-group list-group-flush">
       <%_ if (campground.reviews.length === 0) { _%>
-        <li class="list-group-item"><em>No one has left a review for this campground.</em></li>
-      <%_ } else { _%> 
-      <%_   for (let review of campground.reviews) { _%>
+        <li class="list-group-item"><em>No reviews have been left for this campground.</em></li>
+      <%_ } else { _%>
+      <%_   for (let review of campground.reviews.reverse()) { _%>
         <li class="list-group-item">
           <h5>Rating: <%= review.rating %></h5>
           <p style="white-space: pre-line"><%= review.text %></p>
-          <small class="text-muted"><em><%= review._id.getTimestamp() %></em></small>
+          <div class="d-flex justify-content-between align-items-end mb-2">
+            <small class="date fst-italic text-muted"><%= review._id.getTimestamp().toISOString() %></small>
+            <form method="POST" action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE">
+              <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+            </form>
+          </div>
         </li>
       <%_   } _%>
       <%_ } _%>
