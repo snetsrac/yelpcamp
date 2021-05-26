@@ -1,3 +1,4 @@
+const path = require('path');
 const engine = require('ejs-mate');
 const express = require('express');
 const createError = require('http-errors');
@@ -23,6 +24,7 @@ app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true}));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.render('index');
