@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const { User } = require('../models');
 const routeHandlerAsync = require('../utils/routeHandlerAsync');
 const validate = require('../utils/validate');
@@ -25,6 +26,16 @@ router.post('/register', validate('user'), routeHandlerAsync(async (req, res, ne
     req.flash('success', `Welcome to YelpCamp, ${user.username}!`);
     res.redirect('/campgrounds');
   });
+}));
+
+router.get('/login', (req, res) => {
+  res.render('users/login');
+});
+
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/campgrounds',
+  failureRedirect: '/login',
+  failureFlash: true
 }));
 
 module.exports = router;
