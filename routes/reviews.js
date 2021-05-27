@@ -1,11 +1,14 @@
 const express = require('express');
 const { Campground, Review } = require('../models');
-const routeHandlerAsync = require('../utils/routeHandlerAsync');
-const validate = require('../utils/validate');
+const { isAuthenticated, routeHandlerAsync, validate } = require('../utils');
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/', validate('review'), routeHandlerAsync(async (req, res, next) => {
+router.get('/', (req, res) => {
+  res.redirect(`/campgrounds/${req.params.id}`);
+});
+
+router.post('/', isAuthenticated, validate('review'), routeHandlerAsync(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
   const review = new Review(req.body.review);
   campground.reviews.push(review);

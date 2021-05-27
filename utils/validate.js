@@ -21,7 +21,7 @@ schemas.campground = Joi.object({
 schemas.review = Joi.object({
   review: Joi.object({
     rating: Joi.number().integer().min(1).max(5).required(),
-    text: Joi.string()
+    text: Joi.string().allow('')
   }).required()
 });
 

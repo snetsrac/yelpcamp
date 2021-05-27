@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const querystring = require('querystring');
 const { User } = require('../models');
 const routeHandlerAsync = require('../utils/routeHandlerAsync');
 const validate = require('../utils/validate');
@@ -29,13 +30,27 @@ router.post('/register', validate('user'), routeHandlerAsync(async (req, res, ne
 }));
 
 router.get('/login', (req, res) => {
+  res.locals._dest = ''
+
+  if (req.query._dest) {
+    res.locals._dest = `?${querystring.stringify({ _dest: req.query._dest })}`;
+  }
+  
   res.render('users/login');
 });
 
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/campgrounds',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+router.post('/login',
+  passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: true
+  }),
+  (req, res) => {
+    if (req.query._dest) {
+      return res.redirect(req.query._dest);
+    }
+
+    res.redirect('/campgrounds');
+  }
+);
 
 module.exports = router;
