@@ -18,13 +18,17 @@ router.get('/register', (req, res) => {
 router.post('/register', validate('user'), routeHandlerAsync(async (req, res, next) => {
   const user = new User({ username: req.body.username, email: req.body.email });
 
-  User.register(user, req.body.password, (err) => {
+  User.register(user, req.body.password, (err, result) => {
     if (err) {
       req.flash('error', err.message);
       return res.redirect('/register');
     }
 
-    req.flash('success', `Welcome to YelpCamp, ${user.username}!`);
+    req.login(result, (err) => {
+      if (err) return next(err);
+    });
+
+    req.flash('success', `Welcome to YelpCamp, ${result.username}!`);
     res.redirect('/campgrounds');
   });
 }));
