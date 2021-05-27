@@ -3,9 +3,12 @@ const engine = require('ejs-mate');
 const express = require('express');
 const createError = require('http-errors');
 const flash = require('connect-flash');
+const LocalStrategy = require('passport-local').Strategy;
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const passport = require('passport');
 const session = require('express-session');
+const { User } = require('./models');
 const campgroundsRouter = require('./routes/campgrounds');
 const reviewsRouter = require('./routes/reviews');
 
@@ -38,6 +41,12 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }));
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash(), (req, res, next) => {
   res.locals.success = req.flash('success');
