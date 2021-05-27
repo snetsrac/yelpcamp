@@ -17,6 +17,23 @@
           <a class="nav-link" href="/campgrounds/new">New Campground</a>
         </li>
       </ul>
+      <div class="navbar-nav ms-auto">
+      <%_ if (user) { _%>
+        <span class="navbar-text px-2"><%= user.username %></span>
+        <span class="navbar-text">•</span>
+        <div class="navbar-item">
+          <a class="nav-link" href="/logout">Log Out</a>
+        </div>
+      <%_ } else { _%>
+        <div class="nav-item">
+          <a class="nav-link" href="/login">Log In</a>
+        </div>
+        <span class="navbar-text">•</span>
+        <div class="nav-item">
+          <a class="nav-link" href="/register">Register</a>
+        </div>
+      <%_ } _%>
+      </div>
     </div>
   </div>
 </nav>
