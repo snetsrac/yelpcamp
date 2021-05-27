@@ -48,13 +48,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(flash(), (req, res, next) => {
+  if (!req.isAuthenticated() && !['/register', '/login'].includes(req.originalUrl) ) {
+    req.session.returnTo = req.originalUrl;
+  }
+
   res.locals.user = req.user;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
 });
 
-app.use('/', routes.users);
+app.use('/', routes.root);
 app.use('/campgrounds', routes.campgrounds);
 app.use('/campgrounds/:id/reviews', routes.reviews);
 

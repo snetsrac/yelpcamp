@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-const querystring = require('querystring');
 const { User } = require('../models');
 const routeHandlerAsync = require('../utils/routeHandlerAsync');
 const validate = require('../utils/validate');
@@ -8,10 +7,14 @@ const validate = require('../utils/validate');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.render('index');
+  res.redirect('/campgrounds');
 });
 
 router.get('/register', (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.redirect('/campgrounds');
+  }
+
   res.render('users/register');
 });
 
@@ -34,12 +37,10 @@ router.post('/register', validate('user'), routeHandlerAsync(async (req, res, ne
 }));
 
 router.get('/login', (req, res) => {
-  res.locals._dest = ''
-
-  if (req.query._dest) {
-    res.locals._dest = `?${querystring.stringify({ _dest: req.query._dest })}`;
+  if (req.isAuthenticated()) {
+    return res.redirect('/campgrounds');
   }
-  
+
   res.render('users/login');
 });
 
@@ -49,11 +50,9 @@ router.post('/login',
     failureFlash: true
   }),
   (req, res) => {
-    if (req.query._dest) {
-      return res.redirect(req.query._dest);
-    }
-
-    res.redirect('/campgrounds');
+    const url = req.session.returnTo || '/campgrounds';
+    delete req.session.returnTo;
+    res.redirect(url);
   }
 );
 
