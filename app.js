@@ -9,8 +9,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const { User } = require('./models');
-const campgroundsRouter = require('./routes/campgrounds');
-const reviewsRouter = require('./routes/reviews');
+const routes = require('./routes');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
   useNewUrlParser: true,
@@ -54,12 +53,9 @@ app.use(flash(), (req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-  res.render('index');
-});
-
-app.use('/campgrounds', campgroundsRouter);
-app.use('/campgrounds/:id/reviews', reviewsRouter);
+app.use('/', routes.users);
+app.use('/campgrounds', routes.campgrounds);
+app.use('/campgrounds/:id/reviews', routes.reviews);
 
 app.all('*', (req, res, next) => {
   next(createError(404, 'The resource you requested could not be found.'));

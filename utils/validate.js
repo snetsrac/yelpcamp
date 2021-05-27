@@ -2,6 +2,12 @@ const createError = require('http-errors');
 const Joi = require('joi');
 const schemas = {};
 
+schemas.user = Joi.object({
+  username: Joi.string().required(),
+  password: Joi.string().required(),
+  email: Joi.string().email().required()
+});
+
 schemas.campground = Joi.object({
   campground: Joi.object({
     title: Joi.string().required(),
