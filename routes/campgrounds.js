@@ -14,14 +14,14 @@ router.get('/new', isAuthenticated, (req, res) => {
 });
 
 router.post('/new', isAuthenticated, validate('campground'), routeHandlerAsync(async (req, res, next) => {
-  const campground = new Campground(req.body.campground);
+  const campground = new Campground({ ...req.body.campground, author: req.user._id });
   await campground.save();
   req.flash('success', `Campground '${campground.title}' was successfully added.`);
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 router.get('/:id', routeHandlerAsync(async (req, res, next) => {
-  const campground = await Campground.findById(req.params.id).populate('reviews');
+  const campground = await Campground.findById(req.params.id).populate('reviews').populate('author');
 
   if (!campground) {
     req.flash('error', 'Could not find that campground!');

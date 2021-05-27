@@ -1,7 +1,6 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
-const Campground = require('../models/campground');
-const Review = require('../models/review');
+const { User, Campground, Review } = require('../models');
 const { descriptors, places, cities }= require('./lists');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -19,9 +18,24 @@ Array.prototype.random = function() {
   return this[Math.floor(Math.random() * this.length)];
 }
 
-const seedDb = async () => {
+seedDb();
+
+async function seedDb() {
+  await User.deleteMany();
   await Campground.deleteMany();
 
+  const user = new User({ username: 'test', email: 'test@test.com' });
+  User.register(user, 'test', (err) => {
+    if (err) throw err;
+  });
+
+  await seedCampgrounds(user);
+
+  console.log('Finished seeding.');
+  db.close();
+};
+
+async function seedCampgrounds(user) {
   for (let i = 0; i < 50; i++) {
     const city = cities.random();
 
@@ -31,17 +45,13 @@ const seedDb = async () => {
       image: 'https://source.unsplash.com/collection/483251',
       price: (Math.random() * 200).toFixed(2),
       location: `${city.city}, ${city.state}`,
+      author: user,
       reviews: await seedReviews()
     });
 
     await camp.save();
   }
-
-  console.log('Finished seeding.');
-  db.close();
-};
-
-seedDb();
+}
 
 async function seedReviews() {
   const result = [];
