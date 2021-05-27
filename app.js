@@ -2,6 +2,7 @@ const path = require('path');
 const engine = require('ejs-mate');
 const express = require('express');
 const createError = require('http-errors');
+const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -27,6 +28,7 @@ app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session({
   secret: 'super secret',
   resave: false,
@@ -36,6 +38,12 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }));
+
+app.use(flash(), (req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 app.get('/', (req, res) => {
   res.render('index');

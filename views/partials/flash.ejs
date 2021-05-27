@@ -1,0 +1,12 @@
+<%_ if (success.length > 0) { _%>
+<div class="alert alert-success alert-dismissable fade show mt-0 mb-3 d-flex justify-content-between" role="alert">
+  <span><%= success %></span>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<%_ } _%>
+<%_ if (error.length > 0) { _%>
+<div class="alert alert-danger alert-dismissable fade show mt-0 mb-3 d-flex justify-content-between" role="alert">
+  <span><%= error %></span>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+<%_ } _%>
