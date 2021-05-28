@@ -3,7 +3,6 @@ const engine = require('ejs-mate');
 const express = require('express');
 const createError = require('http-errors');
 const flash = require('connect-flash');
-const LocalStrategy = require('passport-local').Strategy;
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const passport = require('passport');
