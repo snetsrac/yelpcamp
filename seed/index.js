@@ -24,18 +24,26 @@ async function seedDb() {
   await User.deleteMany();
   await Campground.deleteMany();
 
-  const user = new User({ username: 'test', email: 'test@test.com' });
-  User.register(user, 'test', (err) => {
-    if (err) throw err;
-  });
-
-  await seedCampgrounds(user);
+  const users = await seedUsers();
+  await seedCampgrounds(users);
 
   console.log('Finished seeding.');
   db.close();
 };
 
-async function seedCampgrounds(user) {
+async function seedUsers() {
+  const users = [];
+
+  for (let i = 0; i < 10; i++) {
+    const profile = new User({ username: `test${i}`, email: `test${i}@test.com` });
+    const user = await User.register(profile, `test${i}`);
+    users.push(user);
+  }
+
+  return users;
+}
+
+async function seedCampgrounds(users) {
   for (let i = 0; i < 50; i++) {
     const city = cities.random();
 
@@ -45,21 +53,22 @@ async function seedCampgrounds(user) {
       image: 'https://source.unsplash.com/collection/483251',
       price: (Math.random() * 200).toFixed(2),
       location: `${city.city}, ${city.state}`,
-      author: user,
-      reviews: await seedReviews()
+      author: users.random(),
+      reviews: await seedReviews(users)
     });
 
     await camp.save();
   }
 }
 
-async function seedReviews() {
+async function seedReviews(users) {
   const result = [];
 
   for (let j = 0; j < Math.floor(Math.random() * 10); j++) {
     const review = new Review({
       rating: Math.ceil(Math.random() * 5),
-      text: faker.lorem.paragraphs()
+      text: faker.lorem.paragraphs(),
+      author: users.random()
     });
 
     const document = await review.save();

@@ -47,7 +47,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(flash(), (req, res, next) => {
-  if (!req.isAuthenticated() && !['/register', '/login'].includes(req.originalUrl) ) {
+  if (!['/register', '/login', '/logout'].includes(req.originalUrl) ) {
     req.session.returnTo = req.originalUrl;
   }
 

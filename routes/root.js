@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const { User } = require('../models');
-const routeHandlerAsync = require('../utils/routeHandlerAsync');
+const { routeHandlerAsync } = require('../utils');
 const validate = require('../utils/validate');
 
 const router = express.Router();
@@ -62,7 +62,9 @@ router.get('/logout', (req, res) => {
   }
 
   req.logout();
-  res.redirect('/campgrounds');
+  const url = req.session.returnTo || '/campgrounds';
+  delete req.session.returnTo;
+  res.redirect(url);
 });
 
 module.exports = router;

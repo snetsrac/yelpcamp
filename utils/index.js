@@ -1,4 +1,5 @@
 module.exports.isAuthenticated = require('./isAuthenticated');
-module.exports.isAuthor = require('./isAuthor');
+module.exports.isCampgroundAuthor = require('./isCampgroundAuthor');
+module.exports.isReviewAuthor = require('./isReviewAuthor');
 module.exports.validate = require('./validate');
 module.exports.routeHandlerAsync = require('./routeHandlerAsync');
