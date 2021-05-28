@@ -1,6 +1,6 @@
 const express = require('express');
 const { Campground, Review } = require('../models');
-const { isAuthenticated, routeHandlerAsync, validate } = require('../utils');
+const { isAuthenticated, isAuthor, validate, routeHandlerAsync } = require('../utils');
 
 const router = express.Router();
 
@@ -31,22 +31,23 @@ router.get('/:id', routeHandlerAsync(async (req, res, next) => {
   res.render('campgrounds/show', { campground });
 }));
 
-router.delete('/:id', isAuthenticated, routeHandlerAsync(async (req, res, next) => {
-  console.log('hit')
-  await Campground.findByIdAndDelete(req.params.id);
-  req.flash('success', 'Deleted campground.');
-  res.redirect('/campgrounds');
-}));
-
-router.get('/:id/edit', isAuthenticated, routeHandlerAsync(async (req, res, next) => {
+router.get('/:id/edit', isAuthenticated, isAuthor, routeHandlerAsync(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
   res.render('campgrounds/edit', { campground });
 }));
 
-router.put('/:id/edit', isAuthenticated, validate('campground'), routeHandlerAsync(async (req, res, next) => {
+router.put('/:id', isAuthenticated, isAuthor, validate('campground'), routeHandlerAsync(async (req, res, next) => {
   const campground = await Campground.findByIdAndUpdate(req.params.id, req.body.campground);
+
   req.flash('success', `Successfully updated '${campground.title}'.`);
   res.redirect(`/campgrounds/${campground._id}`);
+}));
+
+router.delete('/:id', isAuthenticated, isAuthor, routeHandlerAsync(async (req, res, next) => {
+  console.log('hit')
+  const campground = await Campground.findByIdAndDelete(req.params.id);
+  req.flash('success', `Successfully deleted '${campground.title}'.`);
+  res.redirect('/campgrounds');
 }));
 
 module.exports = router;
