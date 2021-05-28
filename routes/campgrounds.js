@@ -4,42 +4,19 @@ const { isAuthenticated, isCampgroundAuthor, validate, routeHandlerAsync } = req
 
 const router = express.Router();
 
-router.get('/',
-  routeHandlerAsync(controller.getIndex)
-);
+router.route('/')
+  .get(routeHandlerAsync(controller.getIndex))
+  .post(isAuthenticated, validate('campground'), routeHandlerAsync(controller.postNew));
 
-router.get('/new',
-  isAuthenticated,
-  controller.getNew
-);
+router.route('/new')
+  .get(isAuthenticated, controller.getNew);
 
-router.post('/new',
-  isAuthenticated,
-  validate('campground'),
-  routeHandlerAsync(controller.postNew)
-);
+router.route('/:id')
+  .get(routeHandlerAsync(controller.getCampground))
+  .put(isAuthenticated, isCampgroundAuthor, validate('campground'), routeHandlerAsync(controller.putCampground))
+  .delete(isAuthenticated, isCampgroundAuthor, routeHandlerAsync(controller.deleteCampground));
 
-router.get('/:id',
-  routeHandlerAsync(controller.getCampground)
-);
-
-router.get('/:id/edit',
-  isAuthenticated,
-  isCampgroundAuthor,
-  routeHandlerAsync(controller.getCampgroundEdit)
-);
-
-router.put('/:id',
-  isAuthenticated,
-  isCampgroundAuthor,
-  validate('campground'),
-  routeHandlerAsync(controller.putCampground)
-);
-
-router.delete('/:id',
-  isAuthenticated,
-  isCampgroundAuthor,
-  routeHandlerAsync(controller.deleteCampground)
-);
+router.route('/:id/edit')
+  .get(isAuthenticated, isCampgroundAuthor, routeHandlerAsync(controller.getCampgroundEdit));
 
 module.exports = router;

@@ -4,18 +4,11 @@ const { isAuthenticated, isReviewAuthor, routeHandlerAsync, validate } = require
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', controller.getIndex);
+router.route('/')
+  .get(controller.getIndex)
+  .post(isAuthenticated, validate('review'), routeHandlerAsync(controller.postReview));
 
-router.post('/',
-  isAuthenticated,
-  validate('review'),
-  routeHandlerAsync(controller.postReview)
-);
-
-router.delete('/:reviewId',
-  isAuthenticated,
-  isReviewAuthor,
-  routeHandlerAsync(controller.deleteReview)
-);
+router.route('/:reviewId')
+  .delete(isAuthenticated, isReviewAuthor, routeHandlerAsync(controller.deleteReview));
 
 module.exports = router;

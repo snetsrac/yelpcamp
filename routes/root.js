@@ -6,30 +6,21 @@ const validate = require('../utils/validate');
 
 const router = express.Router();
 
-router.get('/',
-  controller.getIndex
-);
+router.route('/')
+  .get(controller.getIndex);
 
-router.get('/register',
-  controller.getRegister
-);
+router.route('/register')
+  .get(controller.getRegister)
+  .post(validate('user'), routeHandlerAsync(controller.postRegister));
 
-router.post('/register',
-  validate('user'),
-  routeHandlerAsync(controller.postRegister)
-);
+router.route('/login')
+  .get(controller.getLogin)
+  .post(
+    passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+    controller.postLogin
+  );
 
-router.get('/login',
-  controller.getLogin
-);
-
-router.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-  controller.postLogin
-);
-
-router.get('/logout',
-  controller.getLogout
-);
+router.route('/logout')
+  .get(controller.getLogout);
 
 module.exports = router;
