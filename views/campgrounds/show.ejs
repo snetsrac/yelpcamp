@@ -27,23 +27,38 @@
   <div class="col-md-6">
   <%_ if (user) { _%>
     <h1 class="text-center">Leave a Review</h1>
-    <form method="POST" action="/campgrounds/<%= campground._id %>/reviews" class="needs-validation mb-4" novalidate>
-      <div class="mb-3">
-        <label for="rating" class="form-label">Rating</label>
-        <select class="form-select" id="rating" name="review[rating]" required>
-          <option value="" selected>Rate this campground</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a rating.</div>
-      </div>
+    <form id="reviewForm" method="POST" action="/campgrounds/<%= campground._id %>/reviews"
+      class="needs-validation mb-4" novalidate>
+      <fieldset class="form-control starability-basic w-100 mb-3">
+        <div class="form-label">Rating:</div>
+        
+        <input type="radio" id="no-rate" class="form-check input-no-rate" name="review[rating]"
+          checked value="0" aria-label="No rating." required>
+      
+        <input type="radio" id="rate1" class="form-check" name="review[rating]" value="1" required>
+        <label for="rate1" class="form-check-label">1 star.</label>
+      
+        <input type="radio" id="rate2" class="form-check" name="review[rating]" value="2" required>
+        <label for="rate2" class="form-check-label">2 stars.</label>
+      
+        <input type="radio" id="rate3" class="form-check" name="review[rating]" value="3" required>
+        <label for="rate3" class="form-check-label">3 stars.</label>
+      
+        <input type="radio" id="rate4" class="form-check" name="review[rating]" value="4" required>
+        <label for="rate4" class="form-check-label">4 stars.</label>
+      
+        <input type="radio" id="rate5" class="form-check" name="review[rating]" value="5" required>
+        <label for="rate5" class="form-check-label">5 stars.</label>
+        
+        <div class="valid-feedback mt-5">Looks good!</div>
+        <div class="invalid-feedback mt-5">Please provide a rating.</div>
+        
+        <span class="starability-focus-ring"></span>
+      </fieldset>
       <div class="mb-3">
         <label for="text" class="form-label">Description</label>
         <textarea class="form-control" id="text" name="review[text]"></textarea>
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <button type="submit" class="btn btn-success">Submit Review</button>
     </form>
@@ -57,10 +72,10 @@
         <li class="list-group-item"><em>No reviews have been left for this campground.</em></li>
       <%_ } else { _%>
       <%_   for (let review of campground.reviews.reverse()) { _%>
-        <li class="list-group-item">
-          <h5>Rating: <%= review.rating %></h5>
+        <li class="list-group-item p-3">
+          <p class="starability-result" data-rating="<%= review.rating %>">Rated: <%= review.rating %> stars</p>
           <p style="white-space: pre-line"><%= review.text %></p>
-          <div class="d-flex justify-content-between align-items-end mb-2">
+          <div class="d-flex justify-content-between align-items-end">
             <div class="text-muted">
               <small><%= review.author.username %></small>
               <span>•</span>
