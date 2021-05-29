@@ -1,12 +1,14 @@
 const express = require('express');
+const multer = require('multer');
 const controller = require('../controllers/campgrounds');
-const { isAuthenticated, isCampgroundAuthor, validate, routeHandlerAsync } = require('../utils');
+const {isAuthenticated, isCampgroundAuthor, validate, routeHandlerAsync, storage } = require('../utils');
 
 const router = express.Router();
+const parser = multer({ storage: storage });
 
 router.route('/')
   .get(routeHandlerAsync(controller.getIndex))
-  .post(isAuthenticated, validate('campground'), routeHandlerAsync(controller.postNew));
+  .post(isAuthenticated, parser.array('image'), validate('campground'), routeHandlerAsync(controller.postNew));
 
 router.route('/new')
   .get(isAuthenticated, controller.getNew);

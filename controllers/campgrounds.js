@@ -10,7 +10,8 @@ module.exports.getNew = (req, res) => {
 };
 
 module.exports.postNew = async (req, res, next) => {
-  const campground = new Campground({ ...req.body.campground, author: req.user });
+  const images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
+  const campground = new Campground({ ...req.body.campground, images, author: req.user });
   await campground.save();
   req.flash('success', `Campground '${campground.title}' was successfully added.`);
   res.redirect(`/campgrounds/${campground._id}`);
