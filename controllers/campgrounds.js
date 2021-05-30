@@ -1,7 +1,7 @@
 const { Campground } = require('../models');
 
 module.exports.getIndex = async (req, res, next) => {
-  const campgrounds = await Campground.find();
+  const campgrounds = await Campground.find().populate('author');
   res.render('campgrounds/index', { campgrounds });
 };
 

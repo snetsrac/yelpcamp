@@ -1,7 +1,10 @@
 const dates = document.querySelectorAll('.date');
 
 dates.forEach((date) => {
-  date.textContent = new Date(date.textContent).toLocaleString();
+  date.textContent = new Date(date.textContent).toLocaleString('en', {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
 });
 
 
