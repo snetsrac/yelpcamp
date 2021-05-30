@@ -15,7 +15,8 @@ router.route('/new')
 
 router.route('/:id')
   .get(routeHandlerAsync(controller.getCampground))
-  .put(isAuthenticated, isCampgroundAuthor, validate('campground'), routeHandlerAsync(controller.putCampground))
+  .put(isAuthenticated, isCampgroundAuthor, parser.array('image'),
+    validate('campground'), routeHandlerAsync(controller.putCampground))
   .delete(isAuthenticated, isCampgroundAuthor, routeHandlerAsync(controller.deleteCampground));
 
 router.route('/:id/edit')
