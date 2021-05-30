@@ -1,7 +1,7 @@
 <%- layout('layouts/boilerplate') -%>
 <div class="row">
   <div class="col-md-6">
-    <div class="card mb-4">
+    <div class="card shadow mb-4">
       <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <%_ for (let i = 0; i < campground.images.length; i++) { _%>
@@ -22,7 +22,7 @@
         <%_ } _%>
       </div>
       <div class="card-body">
-        <h5 class="card-title"><%= campground.title %></h5>
+        <h3 class="card-title"><%= campground.title %></h3>
         <p class="card-text"><%= campground.description %></p>
       </div>
       <ul class="list-group list-group-flush">
@@ -31,9 +31,11 @@
       </ul>
       <%_ if (user && campground.author.equals(user._id)) { _%>
       <div class="card-body">
-        <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-primary">Edit</a>
         <form class="d-inline" method="POST" action="/campgrounds/<%= campground.id %>/?_method=DELETE">
-          <button class="btn btn-danger" type="submit">Delete</button>
+          <div class="d-grid gap-2">
+            <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-primary">Edit</a>
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </div>
         </form>
       </div>
       <%_ } _%>
@@ -43,45 +45,51 @@
     </div>
   </div>
   <div class="col-md-6">
-  <%_ if (user) { _%>
-    <h1 class="text-center">Leave a Review</h1>
-    <form id="reviewForm" method="POST" action="/campgrounds/<%= campground._id %>/reviews"
-      class="needs-validation mb-4" novalidate>
-      <fieldset class="form-control starability-basic w-100 mb-3">
-        <div class="form-label">Rating:</div>
-        
-        <input type="radio" id="no-rate" class="form-check input-no-rate" name="review[rating]"
-          checked value="0" aria-label="No rating." required>
-      
-        <input type="radio" id="rate1" class="form-check" name="review[rating]" value="1" required>
-        <label for="rate1" class="form-check-label">1 star.</label>
-      
-        <input type="radio" id="rate2" class="form-check" name="review[rating]" value="2" required>
-        <label for="rate2" class="form-check-label">2 stars.</label>
-      
-        <input type="radio" id="rate3" class="form-check" name="review[rating]" value="3" required>
-        <label for="rate3" class="form-check-label">3 stars.</label>
-      
-        <input type="radio" id="rate4" class="form-check" name="review[rating]" value="4" required>
-        <label for="rate4" class="form-check-label">4 stars.</label>
-      
-        <input type="radio" id="rate5" class="form-check" name="review[rating]" value="5" required>
-        <label for="rate5" class="form-check-label">5 stars.</label>
-        
-        <div class="valid-feedback mt-5">Looks good!</div>
-        <div class="invalid-feedback mt-5">Please provide a rating.</div>
-        
-        <span class="starability-focus-ring"></span>
-      </fieldset>
-      <div class="mb-3">
-        <label for="text" class="form-label">Description</label>
-        <textarea class="form-control" id="text" name="review[text]"></textarea>
-        <div class="valid-feedback">Looks good!</div>
+    <%_ if (user) { _%>
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <h4 class="card-title">Leave a Review</h4>
+        <form id="reviewForm" method="POST" action="/campgrounds/<%= campground._id %>/reviews"
+          class="needs-validation mb-4" novalidate>
+          <fieldset class="form-control starability-basic w-100 mb-3">
+            <div class="form-label">Rating:</div>
+            
+            <input type="radio" id="no-rate" class="form-check input-no-rate" name="review[rating]"
+              checked value="0" aria-label="No rating." required>
+          
+            <input type="radio" id="rate1" class="form-check" name="review[rating]" value="1" required>
+            <label for="rate1" class="form-check-label">1 star.</label>
+          
+            <input type="radio" id="rate2" class="form-check" name="review[rating]" value="2" required>
+            <label for="rate2" class="form-check-label">2 stars.</label>
+          
+            <input type="radio" id="rate3" class="form-check" name="review[rating]" value="3" required>
+            <label for="rate3" class="form-check-label">3 stars.</label>
+          
+            <input type="radio" id="rate4" class="form-check" name="review[rating]" value="4" required>
+            <label for="rate4" class="form-check-label">4 stars.</label>
+          
+            <input type="radio" id="rate5" class="form-check" name="review[rating]" value="5" required>
+            <label for="rate5" class="form-check-label">5 stars.</label>
+            
+            <div class="valid-feedback mt-5">Looks good!</div>
+            <div class="invalid-feedback mt-5">Please provide a rating.</div>
+            
+            <span class="starability-focus-ring"></span>
+          </fieldset>
+          <div class="mb-3">
+            <label for="text" class="form-label">Description</label>
+            <textarea class="form-control" id="text" name="review[text]"></textarea>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success">Submit Review</button>
+          </div>
+        </form>
       </div>
-      <button type="submit" class="btn btn-success">Submit Review</button>
-    </form>
-  <%_ } _%>
-    <div class="card">
+    </div>
+    <%_ } _%>
+    <div class="card shadow">
       <div class="card-header">
         <h4 class="card-title">Reviews</h4>
       </div>
@@ -91,19 +99,18 @@
       <%_ } else { _%>
       <%_   for (let review of campground.reviews.reverse()) { _%>
         <li class="list-group-item p-3">
-          <p class="starability-result" data-rating="<%= review.rating %>">Rated: <%= review.rating %> stars</p>
-          <p style="white-space: pre-line"><%= review.text %></p>
-          <div class="d-flex justify-content-between align-items-end">
-            <div class="text-muted">
-              <small><%= review.author.username %></small>
-              <span>•</span>
-              <small class="date fst-italic"><%= review._id.getTimestamp().toISOString() %></small>
-            </div>
+          <div class="d-flex justify-content-between">
+            <p class="starability-result" data-rating="<%= review.rating %>">Rated: <%= review.rating %> stars</p>
             <%_ if (user && user.equals(review.author._id)) { _%>
-            <form method="POST" action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE">
-              <button class="btn btn-sm btn-danger" type="submit">Delete</button>
-            </form>
+              <form method="POST" action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE">
+                <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+              </form>
             <%_ } _%>
+          </div>
+          <p style="white-space: pre-line"><%= review.text %></p>
+          <div class="d-flex justify-content-between text-muted">
+            <small><%= review.author.username %></small>
+            <small class="date fst-italic"><%= review._id.getTimestamp().toISOString() %></small>
           </div>
         </li>
       <%_   } _%>
