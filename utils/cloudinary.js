@@ -5,6 +5,6 @@ module.exports = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'yelpcamp',
-    format: 'png'
+    allowed_formats: ['jpg', 'jpeg', 'png']
   }
 });

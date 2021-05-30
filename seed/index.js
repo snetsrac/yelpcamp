@@ -1,7 +1,7 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
 const { User, Campground, Review } = require('../models');
-const { descriptors, places, cities }= require('./lists');
+const { descriptors, places, images, cities }= require('./lists');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
   useNewUrlParser: true,
@@ -50,7 +50,7 @@ async function seedCampgrounds(users) {
     const camp = new Campground({
       title: `${descriptors.random()} ${places.random()}`,
       description: `${faker.lorem.paragraph()}`,
-      image: 'https://source.unsplash.com/collection/483251',
+      images: seedImages(),
       price: (Math.random() * 200).toFixed(2),
       location: `${city.city}, ${city.state}`,
       author: users.random(),
@@ -59,6 +59,21 @@ async function seedCampgrounds(users) {
 
     await camp.save();
   }
+}
+
+function seedImages() {
+  const result = [];
+  let num = Math.ceil(Math.random() * 5);
+  let i = num;
+
+  while (num > 0) {
+    result.push(images[i]);
+    i++;
+    if (i > images.length - 1) i = 0;
+    num--;
+  }
+
+  return result;
 }
 
 async function seedReviews(users) {
