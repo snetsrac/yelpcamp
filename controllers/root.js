@@ -1,7 +1,7 @@
 const { User } = require('../models');
 
 module.exports.getIndex = (req, res) => {
-  res.redirect('/campgrounds');
+  res.render('index');
 };
 
 module.exports.getRegister = (req, res) => {
