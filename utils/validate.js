@@ -14,7 +14,8 @@ schemas.campground = Joi.object({
     description: Joi.string().required(),
     price: Joi.number().min(0).precision(2).required(),
     location: Joi.string().required()
-  }).required()
+  }).required(),
+  imagesToDelete: Joi.array().items(Joi.string())
 });
 
 schemas.review = Joi.object({

@@ -39,6 +39,44 @@ if (reviewForm) {
   });
 }
 
+const imageUpload = document.querySelector('#editForm #imageUpload');
+const imageDeletes = document.querySelectorAll('#editForm #imageDelete input[type=checkbox]');
+
+const setImagesValid = () => {
+  imageUpload.setCustomValidity('');
+  imageUpload.checkValidity();
+  imageDeletes.forEach((image) => {
+    image.setCustomValidity('');
+    image.checkValidity();
+  });
+}
+
+const setImagesInvalid = () => {
+  imageUpload.setCustomValidity('Cannot delete all images.');
+  imageUpload.checkValidity();
+  imageDeletes.forEach((image) => {
+    image.setCustomValidity('Cannot delete all images.');
+    image.checkValidity();
+  });
+}
+
+const validateImageDeletion = () => {
+  const numImagesToDelete = Array.from(imageDeletes).filter((imageDelete) => imageDelete.checked).length;
+  const finalNumberOfImages = imageUpload.files.length + imageDeletes.length - numImagesToDelete;
+
+  if (finalNumberOfImages < 1) {
+    setImagesInvalid();
+  } else {
+    setImagesValid();
+  }
+}
+
+imageUpload?.addEventListener('change', validateImageDeletion);
+
+imageDeletes?.forEach((imageDelete) => {
+  imageDelete.addEventListener('change', validateImageDeletion)
+});
+
 const forms = document.querySelectorAll('.needs-validation')
     
 forms.forEach((form) => {

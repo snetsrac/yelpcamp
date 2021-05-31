@@ -1,11 +1,11 @@
 <%- layout('layouts/boilerplate') -%>
 <div class="row">
-  <div class="col-md-6 offset-md-3">
+  <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
     <div class="card shadow">
       <div class="card-body">
         <h3 class="card-title">Edit Campground</h3>
         <form method="POST" action="/campgrounds/<%= campground._id %>?_method=PUT" enctype="multipart/form-data"
-          class="needs-validation" novalidate>
+          class="needs-validation" id="editForm" novalidate>
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="campground[title]"
@@ -29,11 +29,11 @@
             <div class="invalid-feedback">Please provide a valid price.</div>
           </div>
           <div class="mb-3">
-            <label for="image" class="form-label">Add new image(s)</label>
-            <input type="file" class="form-control" id="image" name="image"
-              accept=".jpg,.jpeg,.png" multiple required>
+            <label for="imageUpload" class="form-label">Add new images</label>
+            <input type="file" class="form-control" id="imageUpload" name="images"
+              accept=".jpg,.jpeg,.png" multiple>
             <div class="valid-feedback">Looks good!</div>
-            <div class="invalid-feedback">Please upload at least one image.</div>
+            <div class="invalid-feedback">Cannot delete all images without uploading one or more new images.</div>
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
@@ -42,6 +42,23 @@
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please provide a description.</div>
           </div>
+          <fieldset class="container px-0" id="imageDelete">
+            <div class="form-label">Delete existing images</div>
+            <div class="row gy-3 gx-3">
+              <%_ for (image of campground.images) { _%>
+              <div class="col-6 col-sm-4 position-relative">
+                <input type="checkbox" class="d-none" id="<%= image.filename %>"
+                  name="imagesToDelete[]" value="<%= image.filename %>">
+                <label for="<%= image.filename %>">
+                  <img class="img-fluid img-thumbnail" src="<%= image.url %>">
+                </label>
+              </div>
+              <%_ } _%>
+            </div>
+          </fieldset>
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Cannot delete all images without uploading one or more new images.</div>
+          <div class="mb-3"></div>
           <div class="d-grid gap-2">
             <button type="submit" class="btn btn-success">Save Edits</button>
             <a class="btn btn-secondary" href="/campgrounds/<%= campground._id %>">Cancel</a>

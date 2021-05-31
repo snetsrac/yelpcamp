@@ -1,3 +1,4 @@
+const createHttpError = require('http-errors');
 const { Campground } = require('../models');
 
 module.exports.getIndex = async (req, res, next) => {
@@ -41,6 +42,15 @@ module.exports.putCampground = async (req, res, next) => {
   const images = req.files.map((file) => ({ url: file.path, filename: file.filename }));
   campground.images.push(...images);
   await campground.save();
+
+  const imagesToDelete = req.body.imagesToDelete || [];
+
+  if (imagesToDelete.length >= campground.images.length) {
+    return next(createHttpError(400, 'Cannot delete all images for a campground, at least one must remain.'));
+  } else {
+    campground.images = campground.images.filter((image) => !imagesToDelete.includes(image.filename));
+    await campground.save();
+  }
 
   req.flash('success', `Successfully updated '${campground.title}'.`);
   res.redirect(`/campgrounds/${campground._id}`);

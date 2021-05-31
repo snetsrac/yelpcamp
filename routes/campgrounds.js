@@ -8,14 +8,14 @@ const parser = multer({ storage: storage });
 
 router.route('/')
   .get(routeHandlerAsync(controller.getIndex))
-  .post(isAuthenticated, parser.array('image'), validate('campground'), routeHandlerAsync(controller.postNew));
+  .post(isAuthenticated, parser.array('images'), validate('campground'), routeHandlerAsync(controller.postNew));
 
 router.route('/new')
   .get(isAuthenticated, controller.getNew);
 
 router.route('/:id')
   .get(routeHandlerAsync(controller.getCampground))
-  .put(isAuthenticated, isCampgroundAuthor, parser.array('image'),
+  .put(isAuthenticated, isCampgroundAuthor, parser.array('images'),
     validate('campground'), routeHandlerAsync(controller.putCampground))
   .delete(isAuthenticated, isCampgroundAuthor, routeHandlerAsync(controller.deleteCampground));
 
