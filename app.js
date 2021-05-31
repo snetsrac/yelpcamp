@@ -9,6 +9,7 @@ const createError = require('http-errors');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const mongoSanitize = require('express-mongo-sanitize');
 const passport = require('passport');
 const session = require('express-session');
 const { User } = require('./models');
@@ -33,6 +34,7 @@ app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize());
 
 app.use(session({
   secret: 'super secret',
