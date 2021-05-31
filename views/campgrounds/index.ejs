@@ -3,14 +3,19 @@
 <%_ for (let campground of campgrounds) { _%>
 <div class="card shadow campground-card mb-4">
   <div class="row g-0">
-    <div class="col-lg-6 col-xl-4">
-      <img class="img-fluid" src="<%= campground.images[0].url %>">
+    <div class="d-none d-md-block col-md-6 col-lg-4 col-xl-3"
+      style="background: url('<%= campground.images[0].url %>'); background-position: center; background-size: cover;">
     </div>
-    <div class="col-lg-6 col-xl-8">
+    <div class="col-12 col-md-6 col-lg-8 col-xl-9">
       <div class="card-body d-flex flex-column h-100">
-        <h5 class="card-title"><%= campground.title %></h5>
-        <h6 class="card-subtitle text-muted"><%= campground.location %></h6>
-        <p class="card-text text-muted mb-2"><small>$<%= campground.price %>/night</small></p>
+        <div class="d-flex align-items-start mb-2">
+          <img class="d-md-none me-3 img-thumbnail" style="max-height: 71px;" src="<%= campground.images[0].thumbnail %> ">
+          <div>
+            <h5 class="card-title"><%= campground.title %></h5>
+            <h6 class="card-subtitle text-muted"><%= campground.location %></h6>
+            <p class="card-text text-muted"><small>$<%= campground.price %>/night</small></p>
+          </div>
+        </div>
         <p class="card-text"><%= campground.description %></p>
         <a class="card-link stretched-link" href="/campgrounds/<%= campground._id %>">
           <span class="visually-hidden">View campground</span>
