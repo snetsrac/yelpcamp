@@ -1,5 +1,8 @@
 <%- layout('layouts/boilerplate') -%>
 <h1 class="mb-4">All Campgrounds</h1>
+<div class="card shadow mb-4">
+  <div id='campgroundIndexMap'></div>
+</div>
 <%_ for (let campground of campgrounds) { _%>
 <div class="card shadow campground-card mb-4">
   <div class="row g-0">
@@ -9,7 +12,7 @@
     <div class="col-12 col-md-6 col-lg-8 col-xl-9">
       <div class="card-body d-flex flex-column h-100">
         <div class="d-flex align-items-start mb-2">
-          <img class="d-md-none me-3 img-thumbnail" style="max-height: 71px;" src="<%= campground.images[0].thumbnail %> ">
+          <img class="d-md-none me-3 img-thumbnail" id="indexThumbnail" src="<%= campground.images[0].thumbnail %> ">
           <div>
             <h5 class="card-title"><%= campground.title %></h5>
             <h6 class="card-subtitle text-muted"><%= campground.location %></h6>
@@ -26,3 +29,18 @@
   </div>
 </div>
 <%_ } _%>
+<script>
+  const mapboxToken = '<%- process.env.MAPBOX_TOKEN %>';
+  const campgrounds = <%- JSON.stringify(campgrounds.map((cg) => {
+    return {
+      type: 'Feature',
+      geometry: cg.geometry,
+      properties: {
+        _id: cg._id,
+        title: cg.title,
+        location: cg.location
+      }
+    };
+  })); %>;
+</script>
+<script src="/js/campgroundIndexMap.js"></script>

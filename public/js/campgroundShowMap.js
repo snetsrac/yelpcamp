@@ -1,6 +1,6 @@
 mapboxgl.accessToken = mapboxToken;
   
-const campgroundShowMap = new mapboxgl.Map({
+const map = new mapboxgl.Map({
   container: 'campgroundShowMap',
   style: 'mapbox://styles/mapbox/outdoors-v11',
   center: coordinates,
@@ -12,10 +12,12 @@ const campgroundShowMap = new mapboxgl.Map({
   touchPitch: false
 });
 
+map.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+
 const popup = new mapboxgl.Popup()
   .setHTML(popupHtml);
 
 const marker = new mapboxgl.Marker()
   .setLngLat(coordinates)
   .setPopup(popup)
-  .addTo(campgroundShowMap);
+  .addTo(map);
