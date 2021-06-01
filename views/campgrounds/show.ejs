@@ -45,6 +45,9 @@
     </div>
   </div>
   <div class="col-lg-6">
+    <div class="card shadow mb-4">
+      <div id='campgroundShowMap'></div>
+    </div>
     <%_ if (user) { _%>
     <div class="card shadow mb-4">
       <div class="card-body">
@@ -119,3 +122,9 @@
     </div>
   </div>
 </div>
+<script>
+  const mapboxToken = '<%- process.env.MAPBOX_TOKEN %>';
+  const coordinates = <%- JSON.stringify(campground.geometry.coordinates) %>;
+  const popupHtml = '<p><strong><%- campground.title %></strong></p><p><%- campground.location %></p>';
+</script>
+<script src="/js/campgroundShowMap.js"></script>

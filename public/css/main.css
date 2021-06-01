@@ -43,3 +43,19 @@
   opacity: 50%;
   transform: scale(0.8);
 }
+
+#campgroundShowMap {
+  height: 300px;
+}
+
+.mapboxgl-marker {
+  cursor: pointer;
+}
+
+.mapboxgl-popup-content {
+  padding: 1rem 1.5rem 1rem 1rem;
+}
+
+.mapboxgl-popup-content p {
+  margin: 0;
+}

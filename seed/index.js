@@ -1,4 +1,9 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const faker = require('faker');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mongoose = require('mongoose');
 const { User, Campground, Review } = require('../models');
 const { descriptors, places, images, cities }= require('./lists');
@@ -13,6 +18,8 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.on('open', () => { console.log('Database connected.'); });
+
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
 
 Array.prototype.random = function() {
   return this[Math.floor(Math.random() * this.length)];
@@ -47,7 +54,7 @@ async function seedCampgrounds(users) {
   for (let i = 0; i < 50; i++) {
     const city = cities.random();
 
-    const camp = new Campground({
+    const campground = new Campground({
       title: `${descriptors.random()} ${places.random()}`,
       description: `${faker.lorem.paragraph()}`,
       images: seedImages(),
@@ -57,7 +64,9 @@ async function seedCampgrounds(users) {
       reviews: await seedReviews(users)
     });
 
-    await camp.save();
+    campground.geometry = await getGeometry(campground.location);
+
+    await campground.save();
   }
 }
 
@@ -91,4 +100,17 @@ async function seedReviews(users) {
   }
 
   return result;
+}
+
+async function getGeometry(location) {
+  try {
+    const geocodingResponse = await geocodingClient.forwardGeocode({
+      query: location,
+      limit: 1
+    }).send();
+
+    return geocodingResponse.body.features[0].geometry;
+  } catch (err) {
+    throw createHttpError(400, `A location named '${location}' could not be found.`);
+  }
 }
