@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const dotenv = require('dotenv').config();
+if (dotenv.error) throw dotenv.error;
+
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+}).catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
+
+const db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error(err);
+});
+
+db.on('open', () => {
+  console.log(`Connected to database: ${db.host}:${db.port}/${db.name}`);
+});
+
+const app = require('../app');
+const port = process.env.PORT || 3000;
+const server = app.listen(port);
+
+server.on('error', (err) => {
+  if (err.syscall !== 'listen') {
+    throw err;
+  }
+  
+  switch (err.code) {
+    case 'EACCES':
+      console.error(`Port ${port} requires elevated privileges.`);
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(`Port ${port} is already in use.`);
+      process.exit(1);
+      break;
+    default:
+      throw err;
+      break;
+  }
+});
+
+server.on('listening', () => {
+  const { address, port } = server.address();
+  console.log(`Server listening on ${address}:${port}.`);
+});

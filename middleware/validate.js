@@ -1,6 +1,8 @@
 const createError = require('http-errors');
 const sanitizeHtml = require('sanitize-html');
-const Joi = require('joi').extend((joi) => {
+const BaseJoi = require('joi');
+
+const Joi = BaseJoi.extend((joi) => {
   return {
     type: 'string',
     base: joi.string(),
@@ -51,6 +53,11 @@ schemas.review = Joi.object({
   }).required()
 });
 
+const prettyMessage = (e) => {
+  const path = e.path.join(' ');
+  return e.message.replace(/^"[^"]*"/, path[0].toUpperCase() + path.slice(1)) + '.';
+}
+
 module.exports = (schemaName) => {
   if (!Joi.isSchema(schemas[schemaName])) {
     throw Error(`A validation schema named ${schemaName} could not be found`);
@@ -66,9 +73,4 @@ module.exports = (schemaName) => {
       next();
     }
   };
-}
-
-function prettyMessage(e) {
-  const path = e.path.join(' ');
-  return e.message.replace(/^"[^"]*"/, path[0].toUpperCase() + path.slice(1)) + '.';
 }

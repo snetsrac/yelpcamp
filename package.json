@@ -2,8 +2,9 @@
   "name": "yelpcamp",
   "version": "0.0.0",
   "description": "Web app for sharing campground information.",
-  "main": "app.js",
+  "main": "bin/www",
   "scripts": {
+    "start": "node bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

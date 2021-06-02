@@ -1,8 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const controller = require('../controllers/root');
-const { routeHandlerAsync } = require('../utils');
-const validate = require('../utils/validate');
+const { routeHandlerAsync, validate } = require('../middleware');
 
 const router = express.Router();
 
