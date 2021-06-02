@@ -1,6 +1,5 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+const dotenv = require('dotenv').config();
+if (dotenv.error) throw dotenv.error;
 
 const path = require('path');
 const createError = require('http-errors');
@@ -11,12 +10,15 @@ const helmet = require('helmet');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const session = require('express-session');
 const { User } = require('./models');
 const routes = require('./routes');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+const uri = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'mongodb://localhost:27017/yelp-camp';
+
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
@@ -25,7 +27,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
-db.on('open', () => { console.log('Database connected.'); });
+db.on('open', () => { console.log(`Connected to database: ${db.host}:${db.port}/${db.name}`); });
 
 const app = express();
 
@@ -64,15 +66,20 @@ app.use(helmet({
 }));
 
 app.use(session({
-  secret: 'super secret',
+  name: '_yc',
+  secret: process.env.SESSION_SECRETS.split(','),
+  proxy: true,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    name: '_yc',
     httpOnly: true,
-    //secure: true,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     maxAge: 1000 * 60 * 60 * 24 * 7
-  }
+  },
+  store: MongoStore.create({
+    mongoUrl: uri,
+    touchAfter: 60 * 60 * 24
+  })
 }));
 
 passport.use(User.createStrategy());

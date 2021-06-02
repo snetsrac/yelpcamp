@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const readline = require('readline');
 const faker = require('faker');
 const mongoose = require('mongoose');
@@ -10,7 +14,9 @@ const MAX_PRICE = 200;
 const MAX_IMAGES = 5;
 const MAX_REVIEWS = 10;
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+const uri = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'mongodb://localhost:27017/yelp-camp';
+
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: true,
