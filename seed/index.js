@@ -25,7 +25,7 @@ mongoose.connect(uri, {
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
-db.on('open', () => { console.log('Database connected.'); });
+db.on('open', () => { console.log(`Connected to database: ${db.host}:${db.port}/${db.name}`); });
 
 Array.prototype.random = function() {
   return this[Math.floor(Math.random() * this.length)];
@@ -48,7 +48,7 @@ async function seedUsers() {
   const users = [];
 
   for (let i = 0; i < NUM_USERS; i++) {
-    const profile = new User({ username: `test${i}`, email: `test${i}@test.com` });
+    const profile = new User({ username: `test${i}`, email: `test${i}@test.com`, isSeed: true });
     const user = await User.register(profile, `test${i}`);
     users.push(user);
 
@@ -76,7 +76,8 @@ async function seedCampgrounds(users) {
         coordinates: [city.longitude + randomOffset(), city.latitude + randomOffset()]
       },
       author: users.random(),
-      reviews: await seedReviews(users)
+      reviews: await seedReviews(users),
+      isSeed: true
     });
 
     await campground.save();
@@ -115,7 +116,8 @@ async function seedReviews(users) {
     const review = new Review({
       rating: Math.ceil(Math.random() * 5),
       text: faker.lorem.paragraphs(),
-      author: users.random()
+      author: users.random(),
+      isSeed: true
     });
 
     const document = await review.save();

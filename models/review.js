@@ -11,6 +11,10 @@ const ReviewSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User'
+  },
+  isSeed: {
+    type: Boolean,
+    default: false
   }
 });
 
