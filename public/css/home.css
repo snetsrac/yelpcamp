@@ -8,10 +8,6 @@ body {
   text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
 }
 
-.cover-container {
-  max-width: 60vw;
-}
-
 .nav-link {
   border-bottom: 0.25rem solid transparent;
   color: rgba(255, 255, 255, 0.5);

@@ -3,14 +3,15 @@ mapboxgl.accessToken = mapboxToken;
 const map = new mapboxgl.Map({
   container: 'campgroundIndexMap',
   style: 'mapbox://styles/mapbox/light-v10',
-  center: [-98.583, 39.833],
+  center: [-96.5, 38.5],
   zoom: 3,
   pitchWithRotate: false,
   boxZoom: false,
   dragRotate: false,
-  touchZoomRotate: false,
   touchPitch: false
 });
+
+map.touchZoomRotate.disableRotation();
 
 map.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
 
