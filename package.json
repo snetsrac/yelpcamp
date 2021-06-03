@@ -1,7 +1,8 @@
 {
   "name": "yelpcamp",
-  "version": "0.0.0",
-  "description": "Web app for sharing campground information.",
+  "version": "0.0.1",
+  "description": "Web app for sharing and reviewing campgrounds.",
+  "private": true,
   "main": "bin/www",
   "scripts": {
     "start": "node bin/www",
