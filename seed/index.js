@@ -48,8 +48,19 @@ async function seedUsers() {
   const users = [];
 
   for (let i = 0; i < NUM_USERS; i++) {
-    const profile = new User({ username: `test${i}`, email: `test${i}@test.com`, isSeed: true });
-    const user = await User.register(profile, `test${i}`);
+    let username;
+    let password;
+
+    if (process.env.NODE_ENV === 'production') {
+      username = `demoUser${i}`;
+      password = faker.git.commitSha();
+    } else {
+      username = `test${i}`;
+      password = `test${i}`;
+    }
+
+    const profile = new User({ username: username, email: `${username}@fakeemail.com`, isSeed: true });
+    const user = await User.register(profile, password);
     users.push(user);
 
     readline.cursorTo(process.stdout, 0);

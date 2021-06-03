@@ -26,7 +26,10 @@ db.on('error', (err) => {
 
 db.on('open', () => {
   console.log(`Connected to database: ${db.host}:${db.port}/${db.name}`);
-  reset().then(() => console.log('Reset database to initial condition.'));
+
+  if (process.env.NODE_ENV === 'production') {
+    reset().then(() => console.log('Reset database to initial condition.'));
+  }
 });
 
 const app = require('../app');
