@@ -125,6 +125,7 @@
 <script>
   const mapboxToken = '<%- process.env.MAPBOX_TOKEN %>';
   const coordinates = <%- JSON.stringify(campground.geometry.coordinates) %>;
-  const popupHtml = '<p><strong><%- campground.title %></strong></p><p><%- campground.location %></p>';
+  const popupHtml = '<p><strong><%- campground.title.replace("'", "\\'") %></strong></p>' +
+                    '<p><%- campground.location.replace("'", "\\'") %></p>';
 </script>
 <script src="/js/campgroundShowMap.js"></script>
